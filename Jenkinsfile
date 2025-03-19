@@ -1,32 +1,39 @@
 pipeline {
     agent any
+
     stages {
         stage('Build') {
             steps {
-                sh 'g++ workingg.cpp -o working_exec'
-                echo 'Build stage completed successfully'
+                script {
+                    echo 'Building the project...'
+                    sh 'g++ -o hello_exec hello_nonexistent.cpp' // Intentional error
+                }
             }
         }
+
         stage('Test') {
             steps {
-                sh './working_exec'
-                echo 'Test stage completed successfully'
+                script {
+                    echo 'Testing the project...'
+                    sh './hello_exec' 
+                }
             }
         }
+
         stage('Deploy') {
             steps {
-                echo 'Deploying the application...'
-                sh 'cp working_exec /tmp/working_exec'
-                echo 'Deploy stage completed successfully'
+                script {
+                    echo 'Deploying the project...'
+                }
             }
         }
     }
+
     post {
         failure {
-            echo 'Pipeline failed!'
-        }
-        success {
-            echo 'Pipeline completed successfully!'
+            script {
+                echo 'Pipeline failed. Please check errors.'
+            }
         }
     }
 }
